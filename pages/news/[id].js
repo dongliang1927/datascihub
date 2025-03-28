@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import CodeBlock from '../../components/CodeBlock';
 
 // 模拟新闻数据 - 完整文章
 const newsArticles = [
@@ -101,7 +102,7 @@ Pandas 2.1增强了与Apache Arrow和Polars等现代数据处理工具的互操�
 
 以下是Pandas 2.1中一些新功能的示例代码：
 
-```python
+\`\`\`python
 import pandas as pd
 
 # 使用PyArrow引擎读取CSV（现在是默认行为）
@@ -118,7 +119,7 @@ print(f"DataFrame内存占用: {memory_usage.sum() / 1024**2:.2f} MB")
 import pyarrow as pa
 arrow_table = df.to_arrow()
 df_back = pd.DataFrame.from_arrow(arrow_table)
-```
+\`\`\`
 
 ## 迁移与兼容性
 
@@ -230,14 +231,10 @@ export default function NewsDetail() {
                 // 处理代码块
                 else if (paragraph.startsWith('```')) {
                   const codeLines = paragraph.split('\n');
-                  const language = codeLines[0].replace('```', '');
+                  const language = codeLines[0].replace('```', '').trim();
                   const code = codeLines.slice(1, -1).join('\n');
                   return (
-                    <div key={i} className="bg-gray-800 text-gray-100 p-4 rounded-md my-6 overflow-x-auto">
-                      <pre>
-                        <code>{code}</code>
-                      </pre>
-                    </div>
+                    <CodeBlock key={i} language={language} code={code} />
                   );
                 }
                 // 处理普通段落
@@ -306,33 +303,28 @@ export default function NewsDetail() {
         </div>
         
         {/* 相关文章 */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">相关阅读</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {relatedArticles.map((article) => (
-              <div key={article.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="h-40 bg-gray-200 relative">
-                  <img
-                    src={article.image}
-                    alt={article.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="font-bold mb-2">
-                    <Link href={`/news/${article.id}`} className="hover:text-primary-600 transition">
-                      {article.title}
-                    </Link>
-                  </h3>
-                  <div className="text-sm text-gray-500 mb-2">{article.date}</div>
-                  <div className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded inline-block">
-                    {article.category}
+        {relatedArticles.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold mb-6">相关文章</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {relatedArticles.map((article) => (
+                <Link href={`/news/${article.id}`} key={article.id} className="hover:text-primary-600 transition">
+                  <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img
+                      src={article.image}
+                      alt={article.title}
+                      className="w-full h-40 object-cover"
+                    />
+                    <div className="p-4">
+                      <h3 className="font-bold mb-2">{article.title}</h3>
+                      <p className="text-sm text-gray-600">{article.date}</p>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
