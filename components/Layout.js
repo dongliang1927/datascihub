@@ -6,7 +6,7 @@ export default function Layout({ children, title = 'DataSciHub - 数据科学学
   return (
     <div className="min-h-screen flex flex-col">
       <Head>
-        <title>{title} - DataSciHub</title>
+        <title>{title}</title>
         <meta name="description" content={description} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
